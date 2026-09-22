@@ -133,7 +133,6 @@ from bernstein.core.volunteer.sandbox_profile import (
     sandbox_env,
 )
 from bernstein.core.volunteer.wall_clock import run_under_wall_clock
-from bernstein.core.volunteer.adapter_selection import select_adapter_for_volunteer
 
 if TYPE_CHECKING:
     from pathlib import Path
