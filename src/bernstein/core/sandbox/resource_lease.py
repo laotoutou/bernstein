@@ -17,11 +17,13 @@ import contextlib
 import json
 import os
 import time
-from pathlib import Path
-from typing import TYPE_CHECKING, Iterator
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Iterator
+    from pathlib import Path
+
+    pass
 
 from bernstein.core.process_utils import is_process_alive
 
