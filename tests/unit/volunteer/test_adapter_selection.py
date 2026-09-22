@@ -56,3 +56,18 @@ class TestAdapterSelection:
                 os.environ.pop("ANTHROPIC_API_KEY", None)
             else:
                 os.environ["ANTHROPIC_API_KEY"] = original
+
+    def test_certified_local_endpoint_returns_local_with_new_signature(self) -> None:
+        """When a local endpoint is certified for the role, the function returns 'local'."""
+        from unittest.mock import patch
+
+        with patch("bernstein.core.volunteer.adapter_selection.certified_roles_for_endpoint") as mock_cert:
+            mock_cert.return_value = {"backend"}
+            result = select_adapter_for_volunteer(
+                role="backend",
+                explicit_adapter=None,
+                workdir="/tmp",
+                base_url="http://example.com",
+                model="test-model",
+            )
+            assert result == "local"

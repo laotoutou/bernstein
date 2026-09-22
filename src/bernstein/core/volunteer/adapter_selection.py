@@ -14,6 +14,7 @@ chosen?) and certified capabilities (is a local endpoint available?).
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
 from bernstein.core.endpoints import certified_roles_for_endpoint
 
@@ -23,12 +24,18 @@ _logger = logging.getLogger(__name__)
 def select_adapter_for_volunteer(
     role: str,
     explicit_adapter: str | None,
+    workdir: Path = Path("."),
+    base_url: str = "",
+    model: str = "",
 ) -> str | None:
     """Select adapter for volunteer mode with local-first default posture.
 
     Args:
         role: The task role (e.g. "backend", "qa").
         explicit_adapter: Adapter explicitly chosen by the donor, or None.
+        workdir: Working directory to check for endpoint certification.
+        base_url: Base URL of the endpoint.
+        model: Model name of the endpoint.
 
     Returns:
         Adapter ID to use: the explicit choice if given, "local" if a certified
@@ -44,10 +51,12 @@ def select_adapter_for_volunteer(
 
     # Check if a local endpoint is certified for this role
     try:
-        certified = certified_roles_for_endpoint()
+        certified = certified_roles_for_endpoint(workdir, base_url, model)
         if role in certified:
             _logger.info("No adapter chosen; selecting local endpoint (certified for role=%s)", role)
             return "local"
+    except TypeError:
+        raise
     except Exception as e:
         _logger.warning("Failed to check certified local endpoints: %s", e)
 
